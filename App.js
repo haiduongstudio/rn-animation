@@ -1,19 +1,47 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, Text, View, Animated } from 'react-native';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
-  );
+export default class App extends Component {
+  componentWillMount() {
+    this.animatedValue1 = new Animated.Value(0);
+    this.animatedValue2 = new Animated.Value(1);
+  }
+
+  componentDidMount() {
+    Animated.parallel([
+      Animated.timing(this.animatedValue1, {
+        toValue: 400,
+        duration: 300
+      }),
+      Animated.spring(this.animatedValue2, {
+        toValue: 3
+      })
+    ]).start();
+  }
+
+  render() {
+    const animateStyles = {
+      transform: [
+        { translateY: this.animatedValue1 },
+        { scale: this.animatedValue2 }
+      ]
+    };
+    return (
+      <View style={styles.container}>
+        <Animated.View style={[styles.box, animateStyles]} />
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'center'
   },
+  box: {
+    backgroundColor: '#333',
+    width: 100,
+    height: 100
+  }
 });
